@@ -10,7 +10,6 @@ export function Tooltip() {
     if (!el) return;
     if (visible && rows.length > 0) {
       const vw = window.innerWidth;
-      const vh = window.innerHeight;
       const rect = el.getBoundingClientRect();
       let left = x + 14;
       let top = y - 10;
