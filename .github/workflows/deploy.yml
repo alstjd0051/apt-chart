@@ -1,0 +1,44 @@
+# Giscus 설정 자동 적용 + Vercel 배포
+# apt-chart-comments: R_kgDORTg8Sg, Q&A: DIC_kwDORTg8Ss4C2v-L
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  VITE_GISCUS_REPO: alstjd0051/apt-chart-comments
+  VITE_GISCUS_REPO_ID: R_kgDORTg8Sg
+  VITE_GISCUS_CATEGORY: Q&A
+  VITE_GISCUS_CATEGORY_ID: DIC_kwDORTg8Ss4C2v-L
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: --prod
