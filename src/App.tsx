@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, memo } from "react";
+import { useEffect, useCallback } from "react";
 import { useDashboardStore } from "./store/dashboardStore";
 import { Tooltip } from "./components/Tooltip";
 import { OverviewPage } from "./pages/OverviewPage";
@@ -7,7 +7,7 @@ import { BuildingPage } from "./pages/BuildingPage";
 import { SpatialPage } from "./pages/SpatialPage";
 import { InteractionPage } from "./pages/InteractionPage";
 import { ModelingPage } from "./pages/ModelingPage";
-import type { TabId, SummaryData } from "./types";
+import type { TabId } from "./types";
 
 const TABS: { id: TabId; label: string; icon: string }[] = [
   { id: "overview", label: "기본 분석", icon: "📊" },
@@ -18,35 +18,6 @@ const TABS: { id: TabId; label: string; icon: string }[] = [
   { id: "modeling", label: "모델링 & 실험", icon: "🧪" },
 ];
 
-const TAB_COMPONENTS: Record<TabId, React.ComponentType<{ data: SummaryData }>> = {
-  overview: OverviewPage,
-  temporal: TemporalPage,
-  building: BuildingPage,
-  spatial: SpatialPage,
-  interaction: InteractionPage,
-  modeling: ModelingPage,
-};
-
-const CachedTabPanel = memo(function CachedTabPanel({
-  tabId,
-  data,
-  isActive,
-  visited,
-}: {
-  tabId: TabId;
-  data: SummaryData;
-  isActive: boolean;
-  visited: boolean;
-}) {
-  if (!visited) return null;
-  const Component = TAB_COMPONENTS[tabId];
-  return (
-    <div style={{ display: isActive ? undefined : "none" }}>
-      <Component data={data} />
-    </div>
-  );
-});
-
 function App() {
   const activeTab = useDashboardStore((s) => s.activeTab);
   const setActiveTab = useDashboardStore((s) => s.setActiveTab);
@@ -54,11 +25,6 @@ function App() {
   const loading = useDashboardStore((s) => s.loading);
   const error = useDashboardStore((s) => s.error);
   const fetchData = useDashboardStore((s) => s.fetchData);
-
-  const visitedRef = useRef<Set<TabId>>(new Set(["overview"]));
-  if (!visitedRef.current.has(activeTab)) {
-    visitedRef.current.add(activeTab);
-  }
 
   useEffect(() => {
     fetchData();
@@ -123,15 +89,12 @@ function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {TABS.map((tab) => (
-          <CachedTabPanel
-            key={tab.id}
-            tabId={tab.id}
-            data={data}
-            isActive={activeTab === tab.id}
-            visited={visitedRef.current.has(tab.id)}
-          />
-        ))}
+        {activeTab === "overview" && <OverviewPage data={data} />}
+        {activeTab === "temporal" && <TemporalPage data={data} />}
+        {activeTab === "building" && <BuildingPage data={data} />}
+        {activeTab === "spatial" && <SpatialPage data={data} />}
+        {activeTab === "interaction" && <InteractionPage data={data} />}
+        {activeTab === "modeling" && <ModelingPage data={data} />}
       </main>
 
       <footer className="bg-white border-t border-gray-200 mt-12">

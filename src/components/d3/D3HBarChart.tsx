@@ -31,7 +31,7 @@ function D3HBarChartInner<T extends object>({
   const margin = { top: 10, right: 50, bottom: 20, left: 70 };
   const { containerRef, width, innerWidth, innerHeight } = useChartDimensions(margin, height);
   const { onHover, onLeave } = useTooltipHandlers();
-  const animated = useEntryAnimation([data.length, innerWidth]);
+  const animated = useEntryAnimation(data.length, innerWidth);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   const { yScale, xScale } = useMemo(() => {

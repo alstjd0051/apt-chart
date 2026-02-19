@@ -28,7 +28,7 @@ export const D3ScatterChart = memo(function D3ScatterChart({
   const margin = { top: 20, right: 20, bottom: 50, left: 60 };
   const { containerRef, width, innerWidth, innerHeight } = useChartDimensions(margin, height);
   const { onHover, onLeave } = useTooltipHandlers();
-  const animated = useEntryAnimation([data.length, innerWidth]);
+  const animated = useEntryAnimation(data.length, innerWidth);
   const [hovered, setHovered] = useState<{ x: number; y: number } | null>(null);
 
   const { xScale, yScale } = useMemo(() => {
