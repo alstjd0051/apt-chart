@@ -1,4 +1,4 @@
-import { GiscusComments } from "../components/GiscusComments";
+import { UtterancesComments } from "../components/UtterancesComments";
 import { QUESTIONS } from "../config/questions";
 import { memo } from "react";
 
@@ -9,7 +9,6 @@ export const CommentsPage = memo(function CommentsPage() {
         <h2 className="text-xl font-bold text-indigo-900 mb-2">질문 & 댓글</h2>
         <p className="text-sm text-indigo-700">
           주제별로 질문을 남겨주세요. GitHub 로그인으로 댓글 작성이 가능합니다.
-          (Private 레포 대신 별도 Public 댓글 전용 레포 사용)
         </p>
       </div>
 
@@ -25,7 +24,10 @@ export const CommentsPage = memo(function CommentsPage() {
                 <p className="mt-1 text-sm text-gray-500">{q.description}</p>
               )}
             </div>
-            <GiscusComments term={`comments-${q.id}`} title="댓글" />
+            <UtterancesComments
+              issueTerm={`comments-${q.id}`}
+              title="댓글"
+            />
           </section>
         ))}
       </div>

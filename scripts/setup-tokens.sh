@@ -72,4 +72,4 @@ if [[ $APPLIED_GH -eq 1 ]] || [[ $APPLIED_VC -eq 1 ]]; then
 fi
 
 echo ""
-echo "🎉 완료. bun run secrets:setup 로 Giscus 시크릿 적용"
+echo "🎉 완료. bun run secrets:setup 로 Vercel 시크릿 적용"

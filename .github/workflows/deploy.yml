@@ -1,17 +1,10 @@
-# Giscus 설정 자동 적용 + Vercel 배포
-# apt-chart-comments: R_kgDORTg8Sg, Q&A: DIC_kwDORTg8Ss4C2v-L
+# Utterances 댓글 + Vercel 배포
 name: Deploy
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
-env:
-  VITE_GISCUS_REPO: alstjd0051/apt-chart-comments
-  VITE_GISCUS_REPO_ID: R_kgDORTg8Sg
-  VITE_GISCUS_CATEGORY: Q&A
-  VITE_GISCUS_CATEGORY_ID: DIC_kwDORTg8Ss4C2v-L
 
 jobs:
   build:
