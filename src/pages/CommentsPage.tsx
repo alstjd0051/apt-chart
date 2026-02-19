@@ -1,36 +1,121 @@
 import { UtterancesComments } from "../components/UtterancesComments";
+import { TopicChart } from "../components/TopicChart";
 import { QUESTIONS } from "../config/questions";
-import { memo } from "react";
+import type { SummaryData } from "../types";
+import { memo, useEffect, useCallback } from "react";
 
-export const CommentsPage = memo(function CommentsPage() {
+interface Props {
+  data: SummaryData | null;
+}
+
+/** 현재 페이지의 섹션별 고유 URL 생성 (GitHub 이슈 제목 = 이 URL로 매핑) */
+function getSectionIssueTerm(sectionId: string): string {
+  if (typeof window === "undefined") return `comments-${sectionId}`;
+  const base =
+    `${window.location.origin}${window.location.pathname}`.replace(/\/$/, "") ||
+    window.location.origin;
+  return `${base}#comments-${sectionId}`;
+}
+
+export const CommentsPage = memo(function CommentsPage({ data }: Props) {
+  // URL 해시(#comments-xxx)로 진입 시 해당 섹션으로 스크롤
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash || !hash.startsWith("#comments-")) return;
+    const id = hash.slice(1);
+    const el = document.getElementById(id);
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, []);
+
+  // 해시 변경 시 스크롤 (뒤로가기 등)
+  useEffect(() => {
+    const onHashChange = () => {
+      const hash = window.location.hash;
+      if (!hash || !hash.startsWith("#comments-")) return;
+      const id = hash.slice(1);
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
   return (
     <div className="space-y-10">
-      <div className="rounded-xl bg-indigo-50 border border-indigo-100 p-5">
+      <div className="rounded-xl px-5 py-1.5">
         <h2 className="text-xl font-bold text-indigo-900 mb-2">질문 & 댓글</h2>
-        <p className="text-sm text-indigo-700">
-          주제별로 질문을 남겨주세요. GitHub 로그인으로 댓글 작성이 가능합니다.
-        </p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-10">
         {QUESTIONS.map((q) => (
-          <section
+          <CommentSection
             key={q.id}
-            className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
-          >
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">{q.title}</h3>
-              {q.description && (
-                <p className="mt-1 text-sm text-gray-500">{q.description}</p>
-              )}
-            </div>
-            <UtterancesComments
-              issueTerm={`comments-${q.id}`}
-              title="댓글"
-            />
-          </section>
+            question={q}
+            data={data}
+            issueTerm={getSectionIssueTerm(q.id)}
+          />
         ))}
       </div>
     </div>
   );
 });
+
+function CommentSection({
+  question,
+  data,
+  issueTerm,
+}: {
+  question: (typeof QUESTIONS)[0];
+  data: SummaryData | null;
+  issueTerm: string;
+}) {
+  const sectionId = `comments-${question.id}`;
+  const sectionUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${window.location.pathname}#${sectionId}`
+      : "";
+
+  const copyLink = useCallback(() => {
+    if (!sectionUrl) return;
+    navigator.clipboard.writeText(sectionUrl);
+  }, [sectionUrl]);
+
+  return (
+    <section
+      id={sectionId}
+      className="scroll-mt-28 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+    >
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800">
+            {question.title}
+          </h3>
+          {question.description && (
+            <p className="mt-1 text-sm text-gray-500">{question.description}</p>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={copyLink}
+          className="shrink-0 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
+          title="이 섹션 링크 복사"
+        >
+          링크 복사
+        </button>
+      </div>
+
+      <div className="mb-6">
+        <TopicChart topicId={question.id} data={data} />
+      </div>
+
+      <div className="pt-4 border-t border-gray-100">
+        <h4 className="mb-3 text-sm font-semibold text-gray-700">댓글</h4>
+        <UtterancesComments issueTerm={issueTerm} />
+      </div>
+    </section>
+  );
+}

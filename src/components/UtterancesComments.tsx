@@ -3,6 +3,7 @@ import { useEffect, useRef, memo } from "react";
 const REPO = "alstjd0051/apt-chart-comments";
 
 interface Props {
+  /** issue-term: GitHub 이슈 제목으로 사용. URL+해시를 사용하면 이슈 클릭 시 해당 섹션으로 바로 이동 가능 */
   issueTerm: string;
   title?: string;
 }
