@@ -7,6 +7,7 @@ import { BuildingPage } from "./pages/BuildingPage";
 import { SpatialPage } from "./pages/SpatialPage";
 import { InteractionPage } from "./pages/InteractionPage";
 import { ModelingPage } from "./pages/ModelingPage";
+import { TeamMembers } from "./components/TeamMembers";
 import type { TabId } from "./types";
 
 const TABS: { id: TabId; label: string; icon: string }[] = [
@@ -50,7 +51,9 @@ function App() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 max-w-md">
-          <h2 className="text-red-700 font-bold text-lg mb-2">데이터 로드 실패</h2>
+          <h2 className="text-red-700 font-bold text-lg mb-2">
+            데이터 로드 실패
+          </h2>
           <p className="text-red-600 text-sm">{error ?? "알 수 없는 오류"}</p>
         </div>
       </div>
@@ -60,13 +63,17 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Tooltip />
+      <TeamMembers />
 
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-4">
-            <h1 className="text-2xl font-bold text-gray-900">서울 아파트 실거래가 대시보드</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              서울 아파트 실거래가 대시보드
+            </h1>
             <p className="text-sm text-gray-500 mt-1">
-              2007~2023년 &middot; 서울 25개 구 &middot; 총 {data.totalRows.toLocaleString()}건 &middot; 파생변수 42개
+              2007~2023년 &middot; 서울 25개 구 &middot; 총{" "}
+              {data.totalRows.toLocaleString()}건 &middot; 파생변수 42개
             </p>
           </div>
           <nav className="flex gap-1 -mb-px overflow-x-auto pb-px scrollbar-none">
@@ -100,7 +107,8 @@ function App() {
       <footer className="bg-white border-t border-gray-200 mt-12">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-gray-400">
-            서울 아파트 실거래가 데이터 시각화 &middot; D3.js + React + Zustand &middot; AI Stages Competition #420
+            서울 아파트 실거래가 데이터 시각화 · D3.js + React + Zustand · AI
+            Stages Competition #420
           </p>
         </div>
       </footer>
