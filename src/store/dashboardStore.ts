@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { SummaryData, TabId } from "../types";
+import type { SummaryData } from "../types";
 
 interface TooltipState {
   visible: boolean;
@@ -9,9 +9,6 @@ interface TooltipState {
 }
 
 interface DashboardState {
-  activeTab: TabId;
-  setActiveTab: (tab: TabId) => void;
-
   data: SummaryData | null;
   loading: boolean;
   error: string | null;
@@ -23,9 +20,6 @@ interface DashboardState {
 }
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
-  activeTab: "overview",
-  setActiveTab: (tab) => set({ activeTab: tab }),
-
   data: null,
   loading: true,
   error: null,
