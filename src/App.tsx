@@ -88,8 +88,8 @@ function App() {
             </h1>
             <p className="text-sm text-gray-500 mt-1">
               {data
-                ? `2007~2023년 · 서울 25개 구 · 총 ${data.totalRows.toLocaleString()}건 · 파생변수 42개`
-                : "2007~2023년 · 서울 25개 구 · 파생변수 42개"}
+                ? `2007~2023년 · 서울 25개 구 · 총 ${data.totalRows.toLocaleString()}건 · 파생변수 30개+`
+                : "2007~2023년 · 서울 25개 구 · 파생변수 30개+"}
             </p>
           </div>
           <nav className="flex gap-1 -mb-px overflow-x-auto pb-px scrollbar-none">
