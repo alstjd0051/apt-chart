@@ -2,7 +2,7 @@ import { UtterancesComments } from "../components/UtterancesComments";
 import { TopicChart } from "../components/TopicChart";
 import { QUESTIONS } from "../config/questions";
 import type { SummaryData } from "../types";
-import { memo, useEffect, useCallback } from "react";
+import { memo, useEffect } from "react";
 
 interface Props {
   data: SummaryData | null;
@@ -74,10 +74,6 @@ function CommentSection({
   issueTerm: string;
 }) {
   const sectionId = `comments-${question.id}`;
-  const sectionUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}${window.location.pathname}#${sectionId}`
-      : "";
 
   return (
     <section
